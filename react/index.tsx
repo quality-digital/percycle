@@ -1,16 +1,18 @@
-import { canUseDOM } from 'vtex.render-runtime'
+import { PixelMessage } from "./typings/events";
+import { canUseDOM } from "vtex.render-runtime";
 
-export function handleEvents(e: PixelMessage) {
-  switch (e.data.eventName) {
-    case 'vtex:pageView': {
+function handleMessages(e: PixelMessage) {
+  const { storeName } = window
 
-    }
-    default: {
-      return
-    }
+  if (e.data.eventName === 'vtex:orderPlaced') {
+    const percycleScript = document.createElement('script');
+    percycleScript.setAttribute('src', `//static.percycle.com/${storeName}/c.js`);
+    percycleScript.setAttribute('async', 'async');
+    percycleScript.setAttribute('defer', 'defer');
+    document.getElementsByTagName('body')[0].appendChild(percycleScript);
   }
 }
 
 if (canUseDOM) {
-  window.addEventListener('message', handleEvents)
+  window.addEventListener("message", handleMessages);
 }
